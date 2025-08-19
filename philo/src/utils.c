@@ -1,30 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/19 18:05:54 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/19 21:05:11 by lginer-m         ###   ########.fr       */
+/*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
+/*   Updated: 2025/08/19 20:50:15 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
 
-static int check_args(int argc, char **argv)
+int convert_to_int(const char *str)
 {
-	int i;
+	int	i;
+	int	sign;
+	int	res;
 
 	i = 0;
-	//ft_atoi como convert
+	sign = 1;
+	res = 0;
+	while (str[i] == ' ' || (str[i] >= '\t' && str[i] <= '\r'))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			return(1);
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		res = res * 10 + (str[i] - '0');
+		i++;
+	}
+	return (sign * res);
 }
 
-int	main(int argc, char **argv)
-{
-	if(argc >= 5 && argc <= 6)
-	{
-		//chequea los argv y compara para que estos funcionen
-	}
-	return (0);
-}
