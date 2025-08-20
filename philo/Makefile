@@ -6,7 +6,7 @@
 #    By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 18:14:11 by lginer-m          #+#    #+#              #
-#    Updated: 2025/08/19 19:23:45 by lginer-m         ###   ########.fr        #
+#    Updated: 2025/08/20 21:34:02 by lginer-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -Wall -Werror -Wextra
 
 # Source and object files
 SRC_DIR = src/
-SRC = main.c
+SRC = main.c utils.c
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
 OBJS = $(SRCS:.c=.o)
 
