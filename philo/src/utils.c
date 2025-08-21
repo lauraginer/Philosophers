@@ -6,11 +6,11 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/20 21:32:10 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/21 12:39:45 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosopher.h"
+#include "../inc/philosopher.h"
 
 int convert_to_int(const char *str)
 {
