@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/21 20:09:41 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:11:08 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 # include <limits.h>
 # include <sys/time.h>
 #include <pthread.h>
+
+# define MTX_INIT 0
+# define MTX_LOCK 1
+# define MTX_UNLOCK 2
+# define MTX_DESTROY 3
 
 typedef struct s_philo t_philo;
 
