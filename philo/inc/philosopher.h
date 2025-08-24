@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/22 18:11:08 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/24 18:40:57 by lauragm          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,18 @@ typedef struct s_philo
 }	t_philo;
 
 
+// Main functions
 int convert_to_int(const char *str);
 int init_philo(t_data *args);
 void print_values(t_data *args);
 int create_threads(t_data *args);
+void *routine_threads(void *arg);
+
+// Mutex functions
+void init_philo_mutex(t_data *data);
+void main_mutex(pthread_mutex_t *mutex, int action);
+void value_state_error(int action);
+void return_error(t_data *data, int error_type);
+void destroy_mutex(t_data *data);
 
 #endif

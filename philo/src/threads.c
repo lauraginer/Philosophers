@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/21 19:22:23 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/24 19:00:12 by lauragm          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,60 @@
 aparece como pthread_tthread, y además, su posicion según izq o derch, pthread_mutex_t	*l_fork
 como izquierda y pthread_mutex_t *r_fork* como derecha*/
 
-int create_threads(t_data *args)
-{
+/*Para los hilos necesitarás:
 
+Inicializar el array de tenedores (data->forks)
+Crear los hilos con pthread_create
+Implementar la rutina de cada filósofo
+Usar pthread_join para esperar a que terminen*/
+
+int create_threads(t_data *data)
+{
+	int i;
+	
+	i = 0;
+	while(i < data->num_philos)
+	{
+		if(pthread_create(&data->philos[i].thread, NULL, routine_threads, (void *)&data->philos[i]) != 0)
+		{
+			printf("Error: Failed to create thread for philosopher %d\n", i + 1);
+			return(1);
+		}
+		i++;
+	}
+	
+	//esperar a que todos los hilos terminen
+	i = 0;
+	while(i < data->num_philos)
+	{
+		pthread_join(data->philos[i].thread, NULL);
+		i++;
+	}
+	
+	return (0);
+}
+
+
+void *routine_threads(void *arg)
+{
+	t_philo *philo;
+	int is_dead;
+	 
+	philo = (t_philo *)arg; // puntero a la estructura t_philo
+	
+	while(1) // salimos cuando detectemos muerte
+	{
+		// Verificar si alguien ha muerto (thread-safe)
+		main_mutex(philo->data->dead_mutex, MTX_LOCK);
+		is_dead = philo->data->dead;
+		main_mutex(philo->data->dead_mutex, MTX_UNLOCK);
+		if(is_dead)
+			break;  // Salir del bucle si alguien murió
+		think(philo);
+		take_forks(philo); // aquí lock de los mutex de los dos forks
+		eat(philo);
+		put_forks(philo);  // aquí unlock de los mutex
+		sleep_philo(philo);
+	}
+	return (NULL);
 }

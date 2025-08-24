@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mutex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:42:46 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/22 21:58:23 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:23:38 by lauragm          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,28 @@
 /*tenemos un array de mutex por cada filo en la estructura, aparece como pthread_mutex_t*forks
 además de todos los mutex generales*/
 
-int init_philo_mutex(t_data *mutex) //funcion para borrar
+void init_philo_mutex(t_data *data)
 {
-	main_mutex(&mutex->dead_mutex, mutex, MTX_INIT);
-	main_mutex(&mutex->done_mutex, mutex, MTX_INIT);
-	main_mutex(&mutex->meal_mutex, mutex, MTX_INIT);
-	main_mutex(&mutex->eat_mutex, mutex, MTX_INIT);
-	main_mutex(&mutex->log, mutex, MTX_INIT);
+	data->dead_mutex = malloc(sizeof(pthread_mutex_t));
+	data->done_mutex = malloc(sizeof(pthread_mutex_t));
+	data->meal_mutex = malloc(sizeof(pthread_mutex_t));
+	data->eat_mutex = malloc(sizeof(pthread_mutex_t));
+	data->log = malloc(sizeof(pthread_mutex_t));
+	
+	if (!data->dead_mutex || !data->done_mutex || !data->meal_mutex || 
+		!data->eat_mutex || !data->log)
+	{
+		printf("Error: Failed to allocate memory for mutex\n");
+		return;
+	}
+	main_mutex(data->dead_mutex, MTX_INIT);
+	main_mutex(data->done_mutex, MTX_INIT);
+	main_mutex(data->meal_mutex, MTX_INIT);
+	main_mutex(data->eat_mutex, MTX_INIT);
+	main_mutex(data->log, MTX_INIT);
 }
 
-void	main_mutex(t_philo *forks, t_data *mutex, int action) //inicializa, desbloquea, bloquea para mtx por cada mtx general que pases
+void	main_mutex(pthread_mutex_t *mutex, int action) //inicializa, desbloquea, bloquea para mtx por cada mtx general que pases
 {
 	int result;
 	
@@ -32,28 +44,29 @@ void	main_mutex(t_philo *forks, t_data *mutex, int action) //inicializa, desbloq
     {
         result = pthread_mutex_init(mutex, NULL);
         if (result != 0)
-            value_state_error(mutex, action);
+            value_state_error(action);
     }
     else if (action == MTX_LOCK)
     {
         result = pthread_mutex_lock(mutex);
-        if (result != 0)
-            value_state_error(mutex, action);
+		if (result != 0)
+            value_state_error(action);
     }
     else if (action == MTX_UNLOCK)
     {
         result = pthread_mutex_unlock(mutex);
-        if (result != 0)
-            value_state_error(mutex, action);
+		if (result != 0)
+            value_state_error(action);
     }
     else if (action == MTX_DESTROY)
     {
         result = pthread_mutex_destroy(mutex);
-        if (result != 0)
-            value_state_error(mutex, action);
+		if (result != 0)
+            value_state_error(action);
     }
 }
-void value_state_error(t_data *mutex, int action)
+
+void value_state_error(int action)
 {	
 	if (action == MTX_INIT)
 		printf("Error: Failed to initialize mutex\n");
@@ -65,12 +78,31 @@ void value_state_error(t_data *mutex, int action)
 		printf("Error: Failed to destroy mutex\n");
 }
 
-// Función para manejar errores y limpiar recursos
-void return_error(t_data *data, int error_type)
+void destroy_mutex(t_data *data) // liberar memoria de mutex(no estoy segura de si esta funcion es necesaria)
 {
-    // Aquí añadirías código para liberar recursos
-    // dependiendo del tipo de error
-    printf("Error type %d: Exiting program\n", error_type);
-    // free_resources(data);
-    exit(1);
+	if (data->dead_mutex)
+	{
+		main_mutex(data->dead_mutex, MTX_DESTROY);
+		free(data->dead_mutex);
+	}
+	if (data->done_mutex)
+	{
+		main_mutex(data->done_mutex, MTX_DESTROY);
+		free(data->done_mutex);
+	}
+	if (data->meal_mutex)
+	{
+		main_mutex(data->meal_mutex, MTX_DESTROY);
+		free(data->meal_mutex);
+	}
+	if (data->eat_mutex)
+	{
+		main_mutex(data->eat_mutex, MTX_DESTROY);
+		free(data->eat_mutex);
+	}
+	if (data->log)
+	{
+		main_mutex(data->log, MTX_DESTROY);
+		free(data->log);
+	}
 }
