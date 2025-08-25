@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/24 19:00:12 by lauragm          ###   ########.fr       */
+/*   Updated: 2025/08/25 21:56:32 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int create_threads(t_data *data)
 	return (0);
 }
 
-
 void *routine_threads(void *arg)
 {
 	t_philo *philo;
@@ -69,7 +68,18 @@ void *routine_threads(void *arg)
 		take_forks(philo); // aquí lock de los mutex de los dos forks
 		eat(philo);
 		put_forks(philo);  // aquí unlock de los mutex
-		sleep_philo(philo);
+		sleep(philo);
 	}
 	return (NULL);
+}
+
+void print_actions(t_data *data, int philo_id, char *log)
+{
+	// aqui podemos gestionar el tiempo, y imprimirlo todo tal cual
+	long long current_time;
+	
+	current_time = obtain_time() - data->init_time;
+	main_mutex(data->log, MTX_LOCK);
+	printf("%lld %d %s\n", current_time , philo_id, log);
+	main_mutex(data->log, MTX_UNLOCK);
 }

@@ -3,15 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 19:00:35 by lauragm           #+#    #+#             */
-/*   Updated: 2025/08/24 19:17:10 by lauragm          ###   ########.fr       */
+/*   Updated: 2025/08/25 20:41:34 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
 
+int think(t_philo *philo)
+{
+	//imprimir solo el mensaje, bloqueando y desbloqueando, pensar es solo tiempo de espera
+	print_actions(philo->data, philo->id, "is thinking");
+}
 Resumen de mutex por propósito:
 
 🍴 Tenedores (l_fork, r_fork):

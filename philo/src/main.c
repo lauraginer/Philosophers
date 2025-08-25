@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:05:54 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/24 16:32:02 by lauragm          ###   ########.fr       */
+/*   Updated: 2025/08/25 17:58:17 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int init_philo(t_data *args)
 		args->philos[i].meal_done = 0;
 		args->philos[i].l_fork = &args->forks[i];
 		args->philos[i].r_fork = &args->forks[(i + 1) % args->num_philos]; //el último filo coge como tenedor derecho el tenedor 0
-		main_mutex(&data->forks[i], MTX_INIT); //tenedores inicializados, ya se puede bloquear e interactuar con ellos
+		main_mutex(&args->forks[i], MTX_INIT); //tenedores inicializados, ya se puede bloquear e interactuar con ellos
         args->philos[i].data = args;
         i++;
 	}

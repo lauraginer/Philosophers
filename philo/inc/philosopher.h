@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/24 18:40:57 by lauragm          ###   ########.fr       */
+/*   Updated: 2025/08/25 21:57:13 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,9 @@ void main_mutex(pthread_mutex_t *mutex, int action);
 void value_state_error(int action);
 void return_error(t_data *data, int error_type);
 void destroy_mutex(t_data *data);
+
+void print_actions(t_data *data, int philo_id, char *log);
+
+long long obtain_time(void)
 
 #endif

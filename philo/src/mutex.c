@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mutex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lauragm <lauragm@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:42:46 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/24 16:23:38 by lauragm          ###   ########.fr       */
+/*   Updated: 2025/08/25 17:59:31 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	main_mutex(pthread_mutex_t *mutex, int action) //inicializa, desbloquea, bl
             value_state_error(action);
     }
 }
+
 
 void value_state_error(int action)
 {	
