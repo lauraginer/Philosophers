@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/25 21:56:55 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:34:05 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,11 @@ void print_values(t_data *args)
 long long obtain_time(void)
 {
 	struct timeval tv;
-	long long time;
-    
+
     if(gettimeofday(&tv, NULL) == -1)
 	{
-		printf("Fatal error to get time\n");
+		printf("Error: Fatal error to get time\n");
 		return(-1);
 	}
-	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-    return (time);
+	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }

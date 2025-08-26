@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/25 21:56:32 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:40:14 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void *routine_threads(void *arg)
 
 void print_actions(t_data *data, int philo_id, char *log)
 {
-	// aqui podemos gestionar el tiempo, y imprimirlo todo tal cual
 	long long current_time;
 	
 	current_time = obtain_time() - data->init_time;

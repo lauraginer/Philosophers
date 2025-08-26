@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:05:54 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/25 17:58:17 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:40:55 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int init_philo(t_data *args)
 	{
 		args->philos[i].id = i + 1;
 		args->philos[i].num_meals = 0;
-        args->philos[i].last_meal = &args->init_time;
+        args->philos[i].last_meal = obtain_time();
 		args->philos[i].eating = 0;
 		args->philos[i].meal_done = 0;
 		args->philos[i].l_fork = &args->forks[i];
@@ -56,6 +56,7 @@ static int check_args(char **argv, t_data *args)
 	}
 	args->dead = 0;
 	args->done = 0;
+	args->init_time = obtain_time();
 	args->forks = malloc(sizeof(t_philo) * args->num_philos); //memoria para forks, como con philo
 	if(!args->forks)
 	{
@@ -75,6 +76,8 @@ int	main(int argc, char **argv)
 			printf("Error: Failed intent to check args\n");
 			return(-1);
 		}
+		init_philo_mutex(&args);
+		create_threads(&args);
 		print_values(&args);
 		/*Lo siguiente normalmente sería preparar también los tenedores 
 		(forks → mutexes) y después crear los threads que simulan a cada filósofo.*/
