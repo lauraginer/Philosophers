@@ -6,13 +6,13 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/26 18:40:14 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/27 21:33:42 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
 
-/*tenemos un elemento de la estructura, que corresponderia a los hilos, 
+/*tenemos un elemento de la estructura, que corresponderia a los hilos,
 aparece como pthread_tthread, y además, su posicion según izq o derch, pthread_mutex_t	*l_fork
 como izquierda y pthread_mutex_t *r_fork* como derecha*/
 
@@ -23,62 +23,61 @@ Crear los hilos con pthread_create
 Implementar la rutina de cada filósofo
 Usar pthread_join para esperar a que terminen*/
 
-int create_threads(t_data *data)
+int	create_threads(t_data *data)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
-	while(i < data->num_philos)
+	while (i < data->num_philos)
 	{
-		if(pthread_create(&data->philos[i].thread, NULL, routine_threads, (void *)&data->philos[i]) != 0)
+		if (pthread_create(&data->philos[i].thread, NULL, routine_threads,
+				(void *)&data->philos[i]) != 0)
 		{
-			printf("Error: Failed to create thread for philosopher %d\n", i + 1);
-			return(1);
+			printf("Error: Failed to create thread for philosopher %d\n", i
+				+ 1);
+			return (1);
 		}
 		i++;
 	}
-	
-	//esperar a que todos los hilos terminen
+	// esperar a que todos los hilos terminen
 	i = 0;
-	while(i < data->num_philos)
+	while (i < data->num_philos)
 	{
 		pthread_join(data->philos[i].thread, NULL);
 		i++;
 	}
-	
 	return (0);
 }
 
-void *routine_threads(void *arg)
+void	*routine_threads(void *arg)
 {
-	t_philo *philo;
-	int is_dead;
-	 
+	t_philo	*philo;
+	int		is_dead;
+
 	philo = (t_philo *)arg; // puntero a la estructura t_philo
-	
-	while(1) // salimos cuando detectemos muerte
+	while (1)               // salimos cuando detectemos muerte
 	{
 		// Verificar si alguien ha muerto (thread-safe)
 		main_mutex(philo->data->dead_mutex, MTX_LOCK);
 		is_dead = philo->data->dead;
 		main_mutex(philo->data->dead_mutex, MTX_UNLOCK);
-		if(is_dead)
-			break;  // Salir del bucle si alguien murió
+		if (is_dead)
+			break ; // Salir del bucle si alguien murió
 		think(philo);
 		take_forks(philo); // aquí lock de los mutex de los dos forks
 		eat(philo);
-		put_forks(philo);  // aquí unlock de los mutex
+		put_forks(philo); // aquí unlock de los mutex
 		sleep(philo);
 	}
 	return (NULL);
 }
 
-void print_actions(t_data *data, int philo_id, char *log)
+void	print_actions(t_data *data, int philo_id, char *log)
 {
-	long long current_time;
-	
+	long long	current_time;
+
 	current_time = obtain_time() - data->init_time;
 	main_mutex(data->log, MTX_LOCK);
-	printf("%lld %d %s\n", current_time , philo_id, log);
+	printf("%lld %d %s\n", current_time, philo_id, log);
 	main_mutex(data->log, MTX_UNLOCK);
 }
