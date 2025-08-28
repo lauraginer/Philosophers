@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/27 21:33:42 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/28 20:19:27 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,29 @@ Crear los hilos con pthread_create
 Implementar la rutina de cada filósofo
 Usar pthread_join para esperar a que terminen*/
 
+static int special_case(t_data *data)
+{
+	if(data->num_philos == 1)
+	{
+		print_actions(data, data->philos[0].id, "has taken a fork");
+		time_to_sleep(data->time_die);
+		print_actions(data, data->philos[0].id, "is dead");
+		return(1);
+	}
+	return(0);
+}
 int	create_threads(t_data *data)
 {
 	int	i;
 
 	i = 0;
+	if(special_case(data)) //si es solo un philo
+		return(0);
 	while (i < data->num_philos)
 	{
-		if (pthread_create(&data->philos[i].thread, NULL, routine_threads,
-				(void *)&data->philos[i]) != 0)
+		if (pthread_create(&data->philos[i].thread, NULL, routine_threads, (void *)&data->philos[i]) != 0)
 		{
-			printf("Error: Failed to create thread for philosopher %d\n", i
-				+ 1);
+			printf("Error: Failed to create thread for philosopher %d\n", i + 1);
 			return (1);
 		}
 		i++;
@@ -47,6 +58,8 @@ int	create_threads(t_data *data)
 		i++;
 	}
 	return (0);
+	/*Tener en cuenta las funciones de monitoreo, para comer y 
+	para morir(no se si dormir tambien estoy hasta los cojones)*/
 }
 
 void	*routine_threads(void *arg)

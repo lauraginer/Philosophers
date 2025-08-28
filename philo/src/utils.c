@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/27 22:21:04 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/28 20:54:07 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ long long	obtain_time(void)
 	}
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
+
 int	time_to_sleep(long long duration) //esperar en tiempo real hasta llegar a la duracion deseada
 {
 	long long new_time;

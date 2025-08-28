@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/27 21:32:56 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/28 18:51:52 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,9 @@ typedef struct s_data
 	pthread_mutex_t *eat_mutex;  // mutex para bloque de si esta comiendo
 	long long init_time;         // tiempo de inicio de simulacion
 	pthread_mutex_t *log;        // mutex para escribir por pantalla
-	pthread_mutex_t *forks;     
-		// array de mutex para usar tenedores (uno por filosofo)
+	pthread_mutex_t *forks;     // array de mutex para usar tenedores (uno por filosofo)
 	t_philo *philos;             // estructura para cada filosofo
-}						t_data;
+}t_data;
 
 typedef struct s_philo
 {
@@ -57,7 +56,7 @@ typedef struct s_philo
 	pthread_mutex_t *l_fork; // tenedor izquierdo
 	pthread_mutex_t *r_fork; // tenedor derecho
 	t_data *data;            // estructura de datos general
-}						t_philo;
+}t_philo;
 
 // Main functions
 int	convert_to_int(const char *str);
