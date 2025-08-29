@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:05:54 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/27 21:35:09 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/29 19:30:48 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ static int	check_args(char **argv, t_data *args)
 	}
 	args->dead = 0;
 	args->done = 0;
-	args->init_time = obtain_time();
 	args->forks = malloc(sizeof(t_philo) * args->num_philos); // memoria para forks, como con philo
 	if (!args->forks)
 	{
@@ -81,7 +80,7 @@ int	main(int argc, char **argv)
 		init_philo_mutex(&args);
 		create_threads(&args);
 		print_values(&args);
-		/*Lo siguiente normalmente sería preparar también los tenedores(forks → mutexes) y después crear los threads que simulan a cada filósofo.*/
+		
 	}
 	else
 		return (-1);

@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 19:00:35 by lauragm           #+#    #+#             */
-/*   Updated: 2025/08/28 20:53:39 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:25:35 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void eat(t_philo *philo)
 	if (philo->data->must_eat != -1) //incrementamos conforme vayamos comiendo
         philo->num_meals++;
 	main_mutex(philo->data->eat_mutex, MTX_UNLOCK);
-	time_to_sleep(philo->data->time_eat); // dormimos/esperamos durante el tiempo de comer
+	time_to_sleep(philo->data->time_eat); // esperamos durante el tiempo de comer
 /*Coger ambos tenedores (bloqueando mutex) ✅
 Actualizar last_meal ✅
 Imprimir acción ✅

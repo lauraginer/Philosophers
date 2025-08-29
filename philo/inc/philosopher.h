@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/28 18:51:52 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/29 19:25:54 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,7 @@ void	destroy_mutex(t_data *data);
 void	print_actions(t_data *data, int philo_id, char *log);
 
 long long	obtain_time(void);
+
+int monitor_philo(t_data *data);
 
 #endif
