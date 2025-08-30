@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/29 19:25:54 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/08/30 22:05:20 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <unistd.h>
 
 # define MTX_INIT 0
 # define MTX_LOCK 1
@@ -41,9 +42,10 @@ typedef struct s_data
 	pthread_mutex_t *eat_mutex;  // mutex para bloque de si esta comiendo
 	long long init_time;         // tiempo de inicio de simulacion
 	pthread_mutex_t *log;        // mutex para escribir por pantalla
-	pthread_mutex_t *forks;     // array de mutex para usar tenedores (uno por filosofo)
+	pthread_mutex_t *forks;     
+		// array de mutex para usar tenedores (uno por filosofo)
 	t_philo *philos;             // estructura para cada filosofo
-}t_data;
+}						t_data;
 
 typedef struct s_philo
 {
@@ -56,26 +58,33 @@ typedef struct s_philo
 	pthread_mutex_t *l_fork; // tenedor izquierdo
 	pthread_mutex_t *r_fork; // tenedor derecho
 	t_data *data;            // estructura de datos general
-}t_philo;
+}						t_philo;
 
 // Main functions
-int	convert_to_int(const char *str);
-int		init_philo(t_data *args);
-void	print_values(t_data *args);
-int		create_threads(t_data *args);
-void	*routine_threads(void *arg);
+int						convert_to_int(const char *str);
+int						init_philo(t_data *args);
+void					print_values(t_data *args);
+int						create_threads(t_data *args);
+void					*routine_threads(void *arg);
 
 // Mutex functions
-void	init_philo_mutex(t_data *data);
-void	main_mutex(pthread_mutex_t *mutex, int action);
-void	value_state_error(int action);
-void	return_error(t_data *data, int error_type);
-void	destroy_mutex(t_data *data);
+void					init_philo_mutex(t_data *data);
+void					main_mutex(pthread_mutex_t *mutex, int action);
+void					value_state_error(int action);
+void					return_error(t_data *data, int error_type);
+void					destroy_mutex(t_data *data);
 
-void	print_actions(t_data *data, int philo_id, char *log);
+void					print_actions(t_data *data, int philo_id, char *log);
 
-long long	obtain_time(void);
+long long				obtain_time(void);
 
-int monitor_philo(t_data *data);
+int						monitor_philo(t_data *data);
+int						manage_all_eaten(t_data *data);
+int						time_to_sleep(long long duration);
+void					think(t_philo *philo);
+void					take_forks(t_philo *philo);
+void					eat(t_philo *philo);
+void					put_forks(t_philo *philo);
+void					philo_sleep(t_philo *philo);
 
 #endif
