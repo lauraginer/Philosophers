@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:05:54 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/30 21:40:45 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/01 13:29:03 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,11 @@ int	main(int argc, char **argv)
 			printf("Error: Failed intent to check args\n");
 			return (-1);
 		}
+		//printf("pasa");
 		init_philo_mutex(&args);
 		create_threads(&args);
 		destroy_mutex(&args);
-		print_values(&args);
+		//print_values(&args);
 	}
 	else
 		return (-1);

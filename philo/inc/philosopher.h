@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/30 22:05:20 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:24:47 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ typedef struct s_data
 	pthread_mutex_t *eat_mutex;  // mutex para bloque de si esta comiendo
 	long long init_time;         // tiempo de inicio de simulacion
 	pthread_mutex_t *log;        // mutex para escribir por pantalla
-	pthread_mutex_t *forks;     
-		// array de mutex para usar tenedores (uno por filosofo)
-	t_philo *philos;             // estructura para cada filosofo
+	pthread_mutex_t		*forks;
+	// array de mutex para usar tenedores (uno por filosofo)
+	t_philo *philos; // estructura para cada filosofo
 }						t_data;
 
 typedef struct s_philo
@@ -78,13 +78,13 @@ void					print_actions(t_data *data, int philo_id, char *log);
 
 long long				obtain_time(void);
 
-int						monitor_philo(t_data *data);
-int						manage_all_eaten(t_data *data);
+void					monitor_philo(t_data *data);
+void					manage_all_eaten(t_data *data);
 int						time_to_sleep(long long duration);
 void					think(t_philo *philo);
 void					take_forks(t_philo *philo);
 void					eat(t_philo *philo);
 void					put_forks(t_philo *philo);
 void					philo_sleep(t_philo *philo);
-
+void					is_dead(t_philo *philo);
 #endif

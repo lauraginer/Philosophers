@@ -6,13 +6,13 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:23:26 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/30 21:15:07 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:19:02 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
 
-int monitor_philo(t_data *data)
+void monitor_philo(t_data *data)
 {
 	int i;
 	long long current_time;
@@ -22,6 +22,8 @@ int monitor_philo(t_data *data)
 	while(i < data->num_philos)
 	{
 		main_mutex(data->eat_mutex, MTX_LOCK); //comprobar si algún filosofo murió de hambre
+		//printf("Valor de antes: %lld\n", current_time - data->philos[i].last_meal);
+		//printf("Time die: %lld\n", data->time_die);
 		if((current_time - data->philos[i].last_meal) > data->time_die)
 		{
 			main_mutex(data->dead_mutex, MTX_LOCK);
@@ -29,17 +31,16 @@ int monitor_philo(t_data *data)
 			main_mutex(data->dead_mutex, MTX_UNLOCK);
 			print_actions(data, data->philos[i].id, "died");
 			main_mutex(data->eat_mutex, MTX_UNLOCK);
-			return(1);
+			return;
 		}
 		main_mutex(data->eat_mutex, MTX_UNLOCK);
 		i++;
 	}
-	if(manage_all_eaten(data))
-		return(1);
-	return(0);
+	manage_all_eaten(data);
+	return;
 }
 
-int manage_all_eaten(t_data *data) //comprobar si todos han comido suficiente
+void manage_all_eaten(t_data *data) //comprobar si todos han comido suficiente
 {
 	int finished;
 	int i;
@@ -61,9 +62,9 @@ int manage_all_eaten(t_data *data) //comprobar si todos han comido suficiente
 			main_mutex(data->dead_mutex, MTX_LOCK);
 			data->dead = 1; //se terminacion la simulacion pero no se mueren
 			main_mutex(data->dead_mutex, MTX_UNLOCK);
-			return(1); //todos han comido
+			return; //todos han comido
 		}
 	}
-	return(0);
+	return;
 }
 

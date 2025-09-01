@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/30 22:06:37 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:27:33 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,12 @@ int	create_threads(t_data *data)
 		}
 		i++;
 	}
-	i = 0;
 	while (!data->dead) // si ningun filo se ha muerto
 	{
-		if (monitor_philo(data) == 1)
-		{
-			printf("Error: Something bad happens during monitoring");
-			return (-1);
-		}
-		usleep(100);
+		monitor_philo(data);
+		//usleep(100);
 	}
+	
 	while (i < data->num_philos) // esperar a que todos los hilos terminen
 	{
 		pthread_join(data->philos[i].thread, NULL);
@@ -75,21 +71,20 @@ int	create_threads(t_data *data)
 void	*routine_threads(void *arg)
 {
 	t_philo	*philo;
-	int		is_dead;
 
 	philo = (t_philo *)arg; // puntero a la estructura t_philo
 	while (1)               // salimos cuando detectemos muerte
 	{
 		// Verificar si alguien ha muerto (thread-safe)
-		main_mutex(philo->data->dead_mutex, MTX_LOCK);
-		is_dead = philo->data->dead;
-		main_mutex(philo->data->dead_mutex, MTX_UNLOCK);
-		if (is_dead)
-			return(1); // Salir del bucle si alguien murió
+		is_dead(philo);
 		think(philo);
+		is_dead(philo);
 		take_forks(philo); // aquí lock de los mutex de los dos forks
+		is_dead(philo);
 		eat(philo);
+		is_dead(philo);
 		put_forks(philo); // aquí unlock de los mutex
+		is_dead(philo);
 		philo_sleep(philo);
 	}
 	return (NULL);

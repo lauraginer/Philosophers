@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/08/28 20:54:07 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:28:06 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,3 +89,15 @@ int	time_to_sleep(long long duration) //esperar en tiempo real hasta llegar a la
 		usleep(100);
 	return (0);
 }
+
+void	is_dead(t_philo *philo)
+{
+	int is_dead;
+
+	main_mutex(philo->data->dead_mutex, MTX_LOCK);
+	is_dead = philo->data->dead;
+	main_mutex(philo->data->dead_mutex, MTX_UNLOCK);
+	if (is_dead)
+			return ;
+}
+
