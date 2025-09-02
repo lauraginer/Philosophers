@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:05:54 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/01 13:29:03 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:14:55 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	init_philo(t_data *args)
 	int	i;
 
 	i = 0;
-	args->philos = malloc(sizeof(t_philo) * args->num_philos); // asignas memoria para la estructura principal del philo
+	args->philos = malloc(sizeof(t_philo) * args->num_philos);
 	if (!args->philos)
 	{
 		printf("Error: Memory allocation failed for philosophers\n");
@@ -31,7 +31,7 @@ int	init_philo(t_data *args)
 		args->philos[i].eating = 0;
 		args->philos[i].meal_done = 0;
 		args->philos[i].l_fork = &args->forks[i];
-		args->philos[i].r_fork = &args->forks[(i + 1) % args->num_philos]; // el último filo coge como tenedor derecho el tenedor 0
+		args->philos[i].r_fork = &args->forks[(i + 1) % args->num_philos];
 		main_mutex(&args->forks[i], MTX_INIT);
 		args->philos[i].data = args;
 		i++;
@@ -50,14 +50,14 @@ static int	check_args(char **argv, t_data *args)
 	else
 		args->must_eat = -1;
 	if (args->num_philos == 0 || args->time_die == 0 || args->time_eat == 0
-		|| args->time_sleep == 0 || (argv[5] && args->must_eat < 0))
+		|| args->time_sleep == 0 || (argv[5] && args->must_eat <= 0))
 	{
 		printf("Error: invalid value\n");
 		return (-1);
 	}
 	args->dead = 0;
 	args->done = 0;
-	args->forks = malloc(sizeof(t_philo) * args->num_philos); // memoria para forks, como con philo
+	args->forks = malloc(sizeof(pthread_mutex_t) * args->num_philos);
 	if (!args->forks)
 	{
 		printf("Error: Memory allocation failed for forks\n");
@@ -77,11 +77,11 @@ int	main(int argc, char **argv)
 			printf("Error: Failed intent to check args\n");
 			return (-1);
 		}
-		//printf("pasa");
 		init_philo_mutex(&args);
-		create_threads(&args);
+		if (create_threads(&args) != 0)
+			printf("Error: Thread creation failed\n");
 		destroy_mutex(&args);
-		//print_values(&args);
+		free_arrays_and_destroy(&args);
 	}
 	else
 		return (-1);

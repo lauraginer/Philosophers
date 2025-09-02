@@ -6,13 +6,17 @@
 #    By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 18:14:11 by lginer-m          #+#    #+#              #
-#    Updated: 2025/08/30 21:46:29 by lginer-m         ###   ########.fr        #
+#    Updated: 2025/09/02 20:11:24 by lginer-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra #-fsanitize=address
+#-Wunreachable-code -Ofast \
+
+# Debug flags
+DEBUG_FLAGS = -g
 
 # Source and object files
 SRC_DIR = src/
@@ -49,6 +53,15 @@ fclean: clean
 	@echo "$(RED)🔥 $(NAME) has been deleted!$(RESET)"
 
 re: fclean all
+
+debug: CFLAGS += $(DEBUG_FLAGS)
+debug: banner
+	@echo "$(GREEN)🐛 Compiling in debug mode...$(RESET)"
+	@make all
+
+valgrind: debug
+	@echo "$(GREEN)🔍 Running with Valgrind...$(RESET)"
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) 4 410 200 200
 
 banner:
 	@clear

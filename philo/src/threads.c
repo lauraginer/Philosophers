@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/01 17:27:33 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/02 21:14:41 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ int	create_threads(t_data *data)
 	}
 	while (!data->dead) // si ningun filo se ha muerto
 	{
-		monitor_philo(data);
-		//usleep(100);
+		if(monitor_philo(data)) //REALMENTE NO IMPORTA LO QUE RETORNA PORQUE AUN ASÍ
+			break;
 	}
-	
+	i = 0;                       // Resetear i para el bucle de join
 	while (i < data->num_philos) // esperar a que todos los hilos terminen
 	{
 		pthread_join(data->philos[i].thread, NULL);
@@ -76,15 +76,26 @@ void	*routine_threads(void *arg)
 	while (1)               // salimos cuando detectemos muerte
 	{
 		// Verificar si alguien ha muerto (thread-safe)
-		is_dead(philo);
+		if (is_dead(philo) == 1)
+			return (NULL);
 		think(philo);
-		is_dead(philo);
+		if (is_dead(philo) == 1)
+			return (NULL);
 		take_forks(philo); // aquí lock de los mutex de los dos forks
-		is_dead(philo);
+		if (is_dead(philo) == 1)
+		{
+			put_forks(philo);
+			return (NULL);
+		}
 		eat(philo);
-		is_dead(philo);
+		if (is_dead(philo) == 1)
+		{
+			put_forks(philo);
+			return (NULL);
+		}
 		put_forks(philo); // aquí unlock de los mutex
-		is_dead(philo);
+		if (is_dead(philo) == 1)
+			return (NULL);
 		philo_sleep(philo);
 	}
 	return (NULL);
@@ -95,7 +106,7 @@ void	print_actions(t_data *data, int philo_id, char *log)
 	long long	current_time;
 
 	current_time = obtain_time() - data->init_time;
-	main_mutex(data->log, MTX_LOCK);
+	main_mutex(&data->log, MTX_LOCK);
 	printf("%lld %d %s\n", current_time, philo_id, log);
-	main_mutex(data->log, MTX_UNLOCK);
+	main_mutex(&data->log, MTX_UNLOCK);
 }

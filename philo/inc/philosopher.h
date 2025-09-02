@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/01 17:24:47 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:03:20 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ typedef struct s_data
 	long long time_sleep;        // tiempo que tarda en dormir
 	int must_eat;                // numero de comidas necesarias
 	int dead;                    // comprobacion si alguno muere
-	pthread_mutex_t *dead_mutex; // mutex para bloqueo de muerte
+	pthread_mutex_t dead_mutex; // mutex para bloqueo de muerte
 	int done;                    // comprobacion si han comido todos
-	pthread_mutex_t *done_mutex; // mutex para bloqueo de comidas
-	pthread_mutex_t *meal_mutex; // mutex para bloqueo de ultima comida
-	pthread_mutex_t *eat_mutex;  // mutex para bloque de si esta comiendo
+	pthread_mutex_t done_mutex; // mutex para bloqueo de comidas
+	pthread_mutex_t meal_mutex; // mutex para bloqueo de ultima comida
+	pthread_mutex_t eat_mutex;  // mutex para bloque de si esta comiendo
 	long long init_time;         // tiempo de inicio de simulacion
-	pthread_mutex_t *log;        // mutex para escribir por pantalla
+	pthread_mutex_t log;        // mutex para escribir por pantalla
 	pthread_mutex_t		*forks;
 	// array de mutex para usar tenedores (uno por filosofo)
 	t_philo *philos; // estructura para cada filosofo
@@ -71,20 +71,20 @@ void					*routine_threads(void *arg);
 void					init_philo_mutex(t_data *data);
 void					main_mutex(pthread_mutex_t *mutex, int action);
 void					value_state_error(int action);
-void					return_error(t_data *data, int error_type);
 void					destroy_mutex(t_data *data);
 
 void					print_actions(t_data *data, int philo_id, char *log);
 
 long long				obtain_time(void);
 
-void					monitor_philo(t_data *data);
-void					manage_all_eaten(t_data *data);
+int					monitor_philo(t_data *data);
+int					manage_all_eaten(t_data *data);
 int						time_to_sleep(long long duration);
 void					think(t_philo *philo);
 void					take_forks(t_philo *philo);
 void					eat(t_philo *philo);
 void					put_forks(t_philo *philo);
 void					philo_sleep(t_philo *philo);
-void					is_dead(t_philo *philo);
+int						is_dead(t_philo *philo);
+void					free_arrays_and_destroy(t_data *data);
 #endif

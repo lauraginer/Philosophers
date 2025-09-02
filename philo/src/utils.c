@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/01 17:28:06 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:53:17 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ long long	obtain_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int	time_to_sleep(long long duration) //esperar en tiempo real hasta llegar a la duracion deseada
+int	time_to_sleep(long long duration)// esperar en tiempo real hasta llegar a la duracion deseada
 {
 	long long new_time;
 
@@ -90,14 +90,15 @@ int	time_to_sleep(long long duration) //esperar en tiempo real hasta llegar a la
 	return (0);
 }
 
-void	is_dead(t_philo *philo)
+int	is_dead(t_philo *philo)
 {
-	int is_dead;
+	int	is_dead;
 
-	main_mutex(philo->data->dead_mutex, MTX_LOCK);
+	main_mutex(&philo->data->dead_mutex, MTX_LOCK);
 	is_dead = philo->data->dead;
-	main_mutex(philo->data->dead_mutex, MTX_UNLOCK);
+	main_mutex(&philo->data->dead_mutex, MTX_UNLOCK);
 	if (is_dead)
-			return ;
+		return 1;
+	else
+		return 0; // Simplemente retornamos de la función si data->dead es verdadero
 }
-
