@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:05:54 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/02 19:14:55 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 14:08:42 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static int	check_args(char **argv, t_data *args)
 		return (-1);
 	}
 	args->dead = 0;
-	args->done = 0;
 	args->forks = malloc(sizeof(pthread_mutex_t) * args->num_philos);
 	if (!args->forks)
 	{

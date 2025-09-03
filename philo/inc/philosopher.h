@@ -6,12 +6,12 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/02 20:03:20 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:59:50 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILOSOPHER_H
+# define PHILOSOPHER_H
 
 # include <limits.h>
 # include <pthread.h>
@@ -29,62 +29,65 @@ typedef struct s_philo	t_philo;
 
 typedef struct s_data
 {
-	int num_philos;              // numero de filosofos
-	long long time_die;          // tiempo que tarda en morir
-	long long time_eat;          // tiempo que tarda en comer
-	long long time_sleep;        // tiempo que tarda en dormir
-	int must_eat;                // numero de comidas necesarias
-	int dead;                    // comprobacion si alguno muere
-	pthread_mutex_t dead_mutex; // mutex para bloqueo de muerte
-	int done;                    // comprobacion si han comido todos
-	pthread_mutex_t done_mutex; // mutex para bloqueo de comidas
-	pthread_mutex_t meal_mutex; // mutex para bloqueo de ultima comida
-	pthread_mutex_t eat_mutex;  // mutex para bloque de si esta comiendo
-	long long init_time;         // tiempo de inicio de simulacion
-	pthread_mutex_t log;        // mutex para escribir por pantalla
-	pthread_mutex_t		*forks;
-	// array de mutex para usar tenedores (uno por filosofo)
-	t_philo *philos; // estructura para cada filosofo
-}						t_data;
+	int				num_philos;		/* Number of philosophers */
+	long long		time_die;		/* Time until a philosopher dies (in ms) */
+	long long		time_eat;		/* Time it takes to eat (in ms) */
+	long long		time_sleep;		/* Time it takes to sleep (in ms) */
+	int				must_eat;		/* Number of meals required */
+	int				dead;			/* Flag to check if any philosopher died */
+	pthread_mutex_t	dead_mutex;		/* Mutex for death flag access */
+	pthread_mutex_t	done_mutex;		/* Mutex for done flag access */
+	pthread_mutex_t	meal_mutex;		/* Mutex for last meal timing access */
+	pthread_mutex_t	eat_mutex;		/* Mutex for eating state access */
+	long long		init_time;		/* Simulation start time */
+	pthread_mutex_t	log;			/* Mutex for console output */
+	pthread_mutex_t	*forks;			/* Array of mutexes for forks */
+	t_philo			*philos;		/* Array of philosopher structures */
+}	t_data;
 
 typedef struct s_philo
 {
-	int id;                  // id de cada filosofo
-	int num_meals;           // numero de comidas
-	long long last_meal;     // tiempo de la ultima comida
-	int eating;              // comprobacion si esta comiendo
-	int meal_done;           // comprobacion si ha hecho todas las comidas
-	pthread_t thread;        // hilo asignado (cada filosofo es un hilo)
-	pthread_mutex_t *l_fork; // tenedor izquierdo
-	pthread_mutex_t *r_fork; // tenedor derecho
-	t_data *data;            // estructura de datos general
-}						t_philo;
+	int				id;				/* Philosopher ID */
+	int				num_meals;		/* Number of meals eaten */
+	long long		last_meal;		/* Timestamp of the last meal */
+	int				eating;			/* Flag to check if philosopher is eating */
+	int				meal_done;		/* Flag to check if all has eaten enough */
+	pthread_t		thread;			/* Thread assigned to philosopher */
+	pthread_mutex_t	*l_fork;		/* Left fork */
+	pthread_mutex_t	*r_fork;		/* Right fork */
+	t_data			*data;			/* Pointer to general data structure */
+}	t_philo;
 
-// Main functions
-int						convert_to_int(const char *str);
-int						init_philo(t_data *args);
-void					print_values(t_data *args);
-int						create_threads(t_data *args);
-void					*routine_threads(void *arg);
+/* Main functions */
+int			init_philo(t_data *args);
 
-// Mutex functions
-void					init_philo_mutex(t_data *data);
-void					main_mutex(pthread_mutex_t *mutex, int action);
-void					value_state_error(int action);
-void					destroy_mutex(t_data *data);
+/* Mutex functions */
+void		init_philo_mutex(t_data *data);
+void		main_mutex(pthread_mutex_t *mutex, int action);
+void		value_state_error(int action);
+void		destroy_mutex(t_data *data);
+void		free_arrays_and_destroy(t_data *data);
 
-void					print_actions(t_data *data, int philo_id, char *log);
+/* Monitor functions */
+int			monitor_philo(t_data *data);
+int			manage_all_eaten(t_data *data);
 
-long long				obtain_time(void);
+/* Threads functions */
+int			create_threads(t_data *args);
+void		*routine_threads(void *arg);
+void		print_actions(t_data *data, int philo_id, char *log);
 
-int					monitor_philo(t_data *data);
-int					manage_all_eaten(t_data *data);
-int						time_to_sleep(long long duration);
-void					think(t_philo *philo);
-void					take_forks(t_philo *philo);
-void					eat(t_philo *philo);
-void					put_forks(t_philo *philo);
-void					philo_sleep(t_philo *philo);
-int						is_dead(t_philo *philo);
-void					free_arrays_and_destroy(t_data *data);
-#endif
+/* Utils functions */
+int			convert_to_int(const char *str);
+void		print_values(t_data *args);
+long long	obtain_time(void);
+int			time_to_sleep(long long duration);
+int			is_dead(t_philo *philo);
+
+/* Actions functions */
+void		think(t_philo *philo);
+void		take_forks(t_philo *philo);
+void		eat(t_philo *philo);
+void		put_forks(t_philo *philo);
+void		philo_sleep(t_philo *philo);
+#endif /* PHILOSOPHER_H */

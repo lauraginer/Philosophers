@@ -6,23 +6,11 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/02 21:14:41 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 14:16:21 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
-
-/*tenemos un elemento de la estructura, que corresponderia a los hilos,
-aparece como pthread_tthread, y además, su posicion según izq o derch,
-		pthread_mutex_t	*l_fork
-como izquierda y pthread_mutex_t *r_fork* como derecha*/
-
-/*Para los hilos necesitarás:
-
-Inicializar el array de tenedores (data->forks)
-Crear los hilos con pthread_create
-Implementar la rutina de cada filósofo
-Usar pthread_join para esperar a que terminen*/
 
 static int	special_case(t_data *data)
 {
@@ -35,12 +23,23 @@ static int	special_case(t_data *data)
 	}
 	return (0);
 }
+
+static int	dead_and_need_put_forks(t_philo *philo)
+{
+	if (is_dead(philo) == 1)
+	{
+		put_forks(philo);
+		return (1);
+	}
+	return (0);
+}
+
 int	create_threads(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	if (special_case(data)) // si es solo un philo
+	if (special_case(data))
 		return (0);
 	data->init_time = obtain_time();
 	while (i < data->num_philos)
@@ -48,19 +47,18 @@ int	create_threads(t_data *data)
 		if (pthread_create(&data->philos[i].thread, NULL, routine_threads,
 				(void *)&data->philos[i]) != 0)
 		{
-			printf("Error: Failed to create thread for philosopher %d\n", i
-				+ 1);
+			printf("Error: Failed to create thread %d\n", i + 1);
 			return (1);
 		}
 		i++;
 	}
-	while (!data->dead) // si ningun filo se ha muerto
+	while (!data->dead)
 	{
-		if(monitor_philo(data)) //REALMENTE NO IMPORTA LO QUE RETORNA PORQUE AUN ASÍ
-			break;
+		if (monitor_philo(data))
+			break ;
 	}
-	i = 0;                       // Resetear i para el bucle de join
-	while (i < data->num_philos) // esperar a que todos los hilos terminen
+	i = 0;
+	while (i < data->num_philos)
 	{
 		pthread_join(data->philos[i].thread, NULL);
 		i++;
@@ -72,28 +70,21 @@ void	*routine_threads(void *arg)
 {
 	t_philo	*philo;
 
-	philo = (t_philo *)arg; // puntero a la estructura t_philo
-	while (1)               // salimos cuando detectemos muerte
+	philo = (t_philo *)arg;
+	while (1)
 	{
-		// Verificar si alguien ha muerto (thread-safe)
 		if (is_dead(philo) == 1)
 			return (NULL);
 		think(philo);
 		if (is_dead(philo) == 1)
 			return (NULL);
-		take_forks(philo); // aquí lock de los mutex de los dos forks
-		if (is_dead(philo) == 1)
-		{
-			put_forks(philo);
+		take_forks(philo);
+		if (dead_and_need_put_forks(philo) == 1)
 			return (NULL);
-		}
 		eat(philo);
-		if (is_dead(philo) == 1)
-		{
-			put_forks(philo);
+		if (dead_and_need_put_forks(philo) == 1)
 			return (NULL);
-		}
-		put_forks(philo); // aquí unlock de los mutex
+		put_forks(philo);
 		if (is_dead(philo) == 1)
 			return (NULL);
 		philo_sleep(philo);

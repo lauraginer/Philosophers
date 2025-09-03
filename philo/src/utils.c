@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/02 20:53:17 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:28:47 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	convert_to_int(const char *str)
 	}
 	return (sign * res);
 }
-void	print_values(t_data *args)
+/*void	print_values(t_data *args)
 {
 	int	i;
 
@@ -65,8 +65,7 @@ void	print_values(t_data *args)
 			(void *)args->philos[i].data);
 		i++;
 	}
-	printf("\n------------------------------------\n");
-}
+}*/
 
 long long	obtain_time(void)
 {
@@ -80,9 +79,9 @@ long long	obtain_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int	time_to_sleep(long long duration)// esperar en tiempo real hasta llegar a la duracion deseada
+int	time_to_sleep(long long duration)
 {
-	long long new_time;
+	long long	new_time;
 
 	new_time = obtain_time();
 	while ((obtain_time() - new_time) < duration)
@@ -98,7 +97,7 @@ int	is_dead(t_philo *philo)
 	is_dead = philo->data->dead;
 	main_mutex(&philo->data->dead_mutex, MTX_UNLOCK);
 	if (is_dead)
-		return 1;
+		return (1);
 	else
-		return 0; // Simplemente retornamos de la función si data->dead es verdadero
+		return (0);
 }

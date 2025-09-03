@@ -6,28 +6,26 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:23:26 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/02 20:23:10 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:20:13 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
 
-int monitor_philo(t_data *data)
+int	monitor_philo(t_data *data)
 {
-	int i;
-	long long current_time;
+	int			i;
+	long long	current_time;
 
 	i = 0;
 	current_time = obtain_time();
-	while(i < data->num_philos)
+	while (i < data->num_philos)
 	{
-		main_mutex(&data->eat_mutex, MTX_LOCK); //comprobar si algún filosofo murió de hambre
-		//printf("Valor de antes: %lld\n", current_time - data->philos[i].last_meal);
-		//printf("Time die: %lld\n", data->time_die);
-		if((current_time - data->philos[i].last_meal) > data->time_die)
+		main_mutex(&data->eat_mutex, MTX_LOCK);
+		if ((current_time - data->philos[i].last_meal) > data->time_die)
 		{
 			main_mutex(&data->dead_mutex, MTX_LOCK);
-			data->dead = 1; //señal de muerte
+			data->dead = 1;
 			main_mutex(&data->dead_mutex, MTX_UNLOCK);
 			print_actions(data, data->philos[i].id, "died");
 			main_mutex(&data->eat_mutex, MTX_UNLOCK);
@@ -41,31 +39,30 @@ int monitor_philo(t_data *data)
 	return (0);
 }
 
-int manage_all_eaten(t_data *data) //comprobar si todos han comido suficiente
+int	manage_all_eaten(t_data *data)
 {
-	int finished;
-	int i;
+	int	finished;
+	int	i;
 
-	if(data->must_eat != -1) //verificamos si existe el argv5
+	if (data->must_eat != -1)
 	{
 		i = 0;
-		finished = 1; //asumimos que han terminado de primeras
-		while(i < data->num_philos)
+		finished = 1;
+		while (i < data->num_philos)
 		{
 			main_mutex(&data->eat_mutex, MTX_LOCK);
-			if(data->philos[i].num_meals < data->must_eat)
+			if (data->philos[i].num_meals < data->must_eat)
 				finished = 0;
 			main_mutex(&data->eat_mutex, MTX_UNLOCK);
 			i++;
 		}
-		if(finished)
+		if (finished)
 		{
 			main_mutex(&data->dead_mutex, MTX_LOCK);
-			data->dead = 1; //se terminacion la simulacion pero no se mueren
+			data->dead = 1;
 			main_mutex(&data->dead_mutex, MTX_UNLOCK);
-			return 1; //todos han comido
+			return (1);
 		}
 	}
-	return 0;
+	return (0);
 }
-
