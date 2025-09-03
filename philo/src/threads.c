@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 12:43:12 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/03 14:16:21 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:57:54 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ static int	dead_and_need_put_forks(t_philo *philo)
 
 int	create_threads(t_data *data)
 {
-	int	i;
+	int			i;
+	pthread_t	monitor_thread;
 
 	i = 0;
 	if (special_case(data))
@@ -52,17 +53,13 @@ int	create_threads(t_data *data)
 		}
 		i++;
 	}
-	while (!data->dead)
+	if (pthread_create(&monitor_thread, NULL, monitor_philo, (void *)data) != 0)
 	{
-		if (monitor_philo(data))
-			break ;
+		printf("Error: Failed to create monitor\n");
+		return (1);
 	}
 	i = 0;
-	while (i < data->num_philos)
-	{
-		pthread_join(data->philos[i].thread, NULL);
-		i++;
-	}
+	join_threads(0, monitor_thread, data);
 	return (0);
 }
 
@@ -96,6 +93,13 @@ void	print_actions(t_data *data, int philo_id, char *log)
 {
 	long long	current_time;
 
+	main_mutex(&data->dead_mutex, MTX_LOCK);
+	if (data->dead)
+	{
+		main_mutex(&data->dead_mutex, MTX_UNLOCK);
+		return ;
+	}
+	main_mutex(&data->dead_mutex, MTX_UNLOCK);
 	current_time = obtain_time() - data->init_time;
 	main_mutex(&data->log, MTX_LOCK);
 	printf("%lld %d %s\n", current_time, philo_id, log);

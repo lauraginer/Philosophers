@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:13:27 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/03 13:59:50 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:03:04 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,10 @@ void		destroy_mutex(t_data *data);
 void		free_arrays_and_destroy(t_data *data);
 
 /* Monitor functions */
-int			monitor_philo(t_data *data);
+void		*monitor_philo(void *arg);
 int			manage_all_eaten(t_data *data);
+int			check_philo_death(t_data *data, int i, long long current_time);
+void		join_threads(int i, pthread_t	monitor_thread, t_data *data);
 
 /* Threads functions */
 int			create_threads(t_data *args);

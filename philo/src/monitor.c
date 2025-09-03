@@ -6,37 +6,55 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:23:26 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/03 13:20:13 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:02:59 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
 
-int	monitor_philo(t_data *data)
+int	check_philo_death(t_data *data, int i, long long current_time)
 {
+	main_mutex(&data->eat_mutex, MTX_LOCK);
+	if ((current_time - data->philos[i].last_meal) > data->time_die)
+	{
+		main_mutex(&data->dead_mutex, MTX_LOCK);
+		data->dead = 1;
+		main_mutex(&data->dead_mutex, MTX_UNLOCK);
+		main_mutex(&data->log, MTX_LOCK);
+		printf("%lld %d died\n", current_time - data->init_time,
+			data->philos[i].id);
+		main_mutex(&data->log, MTX_UNLOCK);
+		main_mutex(&data->eat_mutex, MTX_UNLOCK);
+		return (1);
+	}
+	main_mutex(&data->eat_mutex, MTX_UNLOCK);
+	return (0);
+}
+
+void	*monitor_philo(void *arg)
+{
+	t_data		*data;
 	int			i;
 	long long	current_time;
 
-	i = 0;
-	current_time = obtain_time();
-	while (i < data->num_philos)
+	data = (t_data *)arg;
+	while (!data->dead)
 	{
-		main_mutex(&data->eat_mutex, MTX_LOCK);
-		if ((current_time - data->philos[i].last_meal) > data->time_die)
+		i = 0;
+		current_time = obtain_time();
+		while (i < data->num_philos && !data->dead)
 		{
-			main_mutex(&data->dead_mutex, MTX_LOCK);
-			data->dead = 1;
-			main_mutex(&data->dead_mutex, MTX_UNLOCK);
-			print_actions(data, data->philos[i].id, "died");
-			main_mutex(&data->eat_mutex, MTX_UNLOCK);
-			return (1);
+			if (check_philo_death(data, i, current_time))
+				return (NULL);
+			i++;
 		}
-		main_mutex(&data->eat_mutex, MTX_UNLOCK);
-		i++;
+		if (manage_all_eaten(data) == 1)
+		{
+			print_actions(data, 0, "All philosophers have eaten enough!");
+			return (NULL);
+		}
 	}
-	if (manage_all_eaten(data) == 1)
-		return (2);
-	return (0);
+	return (NULL);
 }
 
 int	manage_all_eaten(t_data *data)
@@ -65,4 +83,14 @@ int	manage_all_eaten(t_data *data)
 		}
 	}
 	return (0);
+}
+
+void	join_threads(int i, pthread_t monitor_thread, t_data *data)
+{
+	while (i < data->num_philos)
+	{
+		pthread_join(data->philos[i].thread, NULL);
+		i++;
+	}
+	pthread_join(monitor_thread, NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:39:59 by lginer-m          #+#    #+#             */
-/*   Updated: 2025/09/03 13:28:47 by lginer-m         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:29:40 by lginer-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	convert_to_int(const char *str)
 	if (str[i] == '-' || str[i] == '+')
 	{
 		if (str[i] == '-')
-			return (-1);
+			return (0);
 		i++;
 	}
 	while (str[i] >= '0' && str[i] <= '9')
