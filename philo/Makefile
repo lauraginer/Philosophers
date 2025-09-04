@@ -6,7 +6,7 @@
 #    By: lginer-m <lginer-m@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 18:14:11 by lginer-m          #+#    #+#              #
-#    Updated: 2025/09/02 20:11:24 by lginer-m         ###   ########.fr        #
+#    Updated: 2025/09/03 20:40:24 by lginer-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,9 +34,9 @@ YELLOW = \033[0;33m
 RED = \033[0;31m
 RESET = \033[0m
 
-all: banner $(NAME)
+all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): banner.flag $(OBJS) 
 	@$(CC) $(CFLAGS) $(OBJS) $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)✅ Compiling Philo...$(RESET)"
 
@@ -47,6 +47,7 @@ $(SRC_DIR)%.o: $(SRC_DIR)%.c
 clean:
 	@rm -rf $(OBJS)
 	@echo "$(BLUE)🧹 Object files cleaned!$(RESET)"
+	@rm banner.flag
 
 fclean: clean
 	@rm -rf $(NAME)
@@ -63,7 +64,7 @@ valgrind: debug
 	@echo "$(GREEN)🔍 Running with Valgrind...$(RESET)"
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) 4 410 200 200
 
-banner:
+banner.flag:
 	@clear
 	@echo "$(YELLOW)"
 	@echo " ██████╗ ██╗  ██╗██╗██╗      ██████╗ "
@@ -73,5 +74,6 @@ banner:
 	@echo " ██║     ██║  ██║██║███████╗╚██████╔╝"
 	@echo " ╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝ ╚═════╝ "
 	@echo "$(RESET)"
+	@touch banner.flag
 
 .PHONY: all, clean, fclean, re, banner
