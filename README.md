@@ -321,5 +321,6 @@ Configuración detallada de cada filósofo:
 - **Gestión de errores**: Manejo robusto de fallos de sistema
 
 ---
-Autor:Laura Giner
-42 Project School-Philosophers
+**Autor**: Laura Giner  
+**Fecha**: Septiembre 2025  
+**Proyecto**: 42 School - Philosophers
