@@ -321,5 +321,5 @@ Configuración detallada de cada filósofo:
 - **Gestión de errores**: Manejo robusto de fallos de sistema
 
 ---
-
-*Proyecto desarrollado como parte del curriculum de 42, demostrando conceptos avanzados de programación concurrente y sincronización de hilos.*
+Autor:Laura Giner
+42 Project School-Philosophers
